@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBB-Level Sales Analytics Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <!-- Upload Screen -->
+    <div id="uploadScreen" class="upload-screen">
+        <div class="upload-wrapper">
+            <div class="upload-box" id="uploadBox">
+                <div class="upload-icon">📊</div>
+                <h1 class="upload-title">MBB-Level Sales Analytics</h1>
+                <p class="upload-subtitle">Statistical Analysis & Feature Engineering Dashboard</p>
+                <div class="upload-instructions">
+                    <p>Drop your Excel file here or click to upload</p>
+                    <p class="upload-hint">Supports .xlsx files with sales data structure</p>
+                </div>
+                <input type="file" id="fileInput" accept=".xlsx" style="display: none;">
+                <label for="fileInput" class="upload-button">Choose File</label>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3 class="feature-title">Feature Engineering</h3>
+                    <p class="feature-desc">30+ derived metrics from raw data</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3 class="feature-title">Statistical Analysis</h3>
+                    <p class="feature-desc">Correlations, distributions, trends</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">Navy Blue Aesthetic</h3>
+                    <p class="feature-desc">Professional MBB-style visualization</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="dashboard" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div>
+                    <h1 class="title">Sales Analytics Dashboard</h1>
+                    <p class="subtitle">Advanced Statistical Analysis & Performance Metrics</p>
+                </div>
+                <div class="stats-bar" id="statsBar">
+                    <!-- Stats will be populated by JS -->
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <button class="nav-button active" data-view="overview">Overview</button>
+            <button class="nav-button" data-view="temporal">Temporal</button>
+            <button class="nav-button" data-view="categorical">Categorical</button>
+            <button class="nav-button" data-view="correlations">Correlations</button>
+            <button class="nav-button" data-view="operational">Operational</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Overview View -->
+            <div id="view-overview" class="view active">
+                <div class="grid">
+                    <div class="chart-card span-2">
+                        <h3 class="chart-title">Monthly Performance Trends</h3>
+                        <canvas id="chart-monthly-trends"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Performance Radar</h3>
+                        <canvas id="chart-performance-radar"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Regional Performance</h3>
+                        <canvas id="chart-regional-performance"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Deal Size Distribution</h3>
+                        <canvas id="chart-deal-size"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Temporal View -->
+            <div id="view-temporal" class="view">
+                <div class="grid">
+                    <div class="chart-card span-2">
+                        <h3 class="chart-title">Satisfaction Score Trends</h3>
+                        <canvas id="chart-satisfaction-trends"></canvas>
+                    </div>
+                    <div class="chart-card span-2">
+                        <h3 class="chart-title">Efficiency & Return Rate Evolution</h3>
+                        <canvas id="chart-efficiency-evolution"></canvas>
+                    </div>
+                    <div class="chart-card span-2">
+                        <h3 class="chart-title">Average Fulfillment Time by Month</h3>
+                        <canvas id="chart-fulfillment-time"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categorical View -->
+            <div id="view-categorical" class="view">
+                <div class="grid">
+                    <div class="chart-card span-2">
+                        <h3 class="chart-title">Channel Efficiency Analysis</h3>
+                        <canvas id="chart-channel-efficiency"></canvas>
+                    </div>
+                    <div class="chart-card span-2">
+                        <h3 class="chart-title">Product Category Return Rates</h3>
+                        <canvas id="chart-category-returns"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Regional Orders Distribution</h3>
+                        <canvas id="chart-regional-distribution"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Channel Volume</h3>
+                        <canvas id="chart-channel-volume"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Correlations View -->
+            <div id="view-correlations" class="view">
+                <div class="grid">
+                    <div class="chart-card span-2">
+                        <h3 class="chart-title" id="correlation-title">Top Feature Relationship</h3>
+                        <p class="correlation-note" id="correlation-note"></p>
+                        <canvas id="chart-correlation-scatter"></canvas>
+                    </div>
+                    <div class="chart-card span-2">
+                        <h3 class="chart-title">Top Correlations Discovered</h3>
+                        <div class="correlation-list" id="correlationList">
+                            <!-- Correlations will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operational View -->
+            <div id="view-operational" class="view">
+                <div class="grid">
+                    <div class="chart-card span-2">
+                        <h3 class="chart-title">Processing vs Shipping Time Analysis</h3>
+                        <canvas id="chart-processing-shipping"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Fulfillment Distribution</h3>
+                        <canvas id="chart-fulfillment-dist"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3 class="chart-title">Customer Value Segments</h3>
+                        <canvas id="chart-customer-value"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p id="footerText">MBB-Level Statistical Analysis Dashboard</p>
+        </footer>
+    </div>
+
+    <script src="data-processor.js"></script>
+    <script src="chart-builder.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
